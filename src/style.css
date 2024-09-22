@@ -27,6 +27,11 @@
   border: none;
 } 
 
+.word{
+  color:#538d4e;
+  font-size: xx-large;
+}
+
 .grid {
   display: grid;
   grid-template-rows: repeat(6, auto);
