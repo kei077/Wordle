@@ -3,6 +3,55 @@ import { testDictionary, realDictionary, validWordsForTesting } from './dictiona
 const dictionary = validWordsForTesting;
 
 let message = document.getElementById("message");
+let timerInterval = null;
+let timeRemaining = 4 * 60; // 4 minutes
+
+let timerDisplay = document.getElementById("timer-display");
+let startButton = document.getElementById("start-timer");
+let stopButton = document.getElementById("stop-timer");
+let resetButton = document.getElementById("reset-timer");
+
+
+function startTimer() {
+  if (!timerInterval) {
+      timerInterval = setInterval(() => {
+          timeRemaining--;
+          updateTimerDisplay();
+
+          if (timeRemaining <= 0) {
+              clearInterval(timerInterval);
+              timerInterval = null;
+              alert("Time's up!");
+          }
+      }, 1000);
+  }
+}
+
+function stopTimer() {
+  if (timerInterval) {
+      clearInterval(timerInterval);
+      timerInterval = null;
+  }
+}
+
+function resetTimer() {
+  stopTimer(); 
+  timeRemaining = 4 * 60; 
+  updateTimerDisplay();
+
+}
+
+function updateTimerDisplay() {
+  let minutes = Math.floor(timeRemaining / 60);
+  let seconds = timeRemaining % 60;
+
+  timerDisplay.innerText = `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+}
+1
+startButton.addEventListener("click", startTimer);
+stopButton.addEventListener("click", stopTimer);
+resetButton.addEventListener("click", resetTimer);
+
 
 const state = {
   secret: dictionary[Math.floor(Math.random() * dictionary.length)],
@@ -170,3 +219,4 @@ function startup() {
 }
 
 startup();
+updateTimerDisplay();

@@ -6,7 +6,15 @@ export const validWordsForTesting = [
   "agora", 
   "seven", 
   "emploi", 
-  "tache"
+  "tache",
+  "liens",
+  "guide",
+  "firms",
+  "jobs",
+  "talks",
+  "meets",
+  "links",
+  "learn",
 ];
 
 export const realDictionary = [
@@ -16,6 +24,14 @@ export const realDictionary = [
   "seven", 
   "emploi", 
   "tache",
+  "liens",
+  "guide",
+  "firms",
+  "jobs",
+  "talks",
+  "meets",
+  "links",
+  "learn",
   "which",
   "there",
   "their",

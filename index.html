@@ -8,20 +8,43 @@
     <link rel="stylesheet" href="./src/style.css" />
   </head>
   <body>
-    <div class="container-flex mt-2">
+    <div id="cont" class="container-flex mt-3">
       <div>
-          <img src="assets/ensias.png" width="90px" height="auto" alt="">
+          <img src="assets/ensias.png" width="100px" height="auto" alt="">
       </div>
       <div>
-          <img src="assets/bridge-logo-removebg-preview.png" width="120px" height="auto" alt="">
+          <img src="assets/bridge-logo-removebg-preview.png" width="130px" height="auto" alt="">
       </div>
       <div>
-          <img src="assets/ADEI-Logo-Vector.png" width="90px" height="auto" alt="">
+          <img src="assets/ADEI-Logo-Vector.png" width="100px" height="auto" alt="">
       </div>
     </div>
     <div class="container-flex" id="message">
     </div>
-    <div id="game" class="mb-0"></div>
+    <div id="timer-section" class="container mt-3 mb-3 pb-3 pt-3">
+      <div class="row">
+        <div class="col-md-3 mt-5 text-center cloud">
+            <h1 class="mt-5" id="timer-display">04:00</h1> 
+            <button id="stop-timer" >
+                <img src="assets/pause.png" width="30px" height="auto" alt="">
+            </button>
+            <button id="start-timer" >
+                <img src="assets/bouton-jouer.png" width="40px" height="auto" alt="">
+            </button>
+            <button id="reset-timer" >
+                <img src="assets/rejouer.png" width="30px" height="auto" alt="">
+            </button>
+            <hr>
+            <h3 id="message"></h3>
+        </div>
+        <div class="col-md-6">
+          <div id="game"></div>
+
+        </div>
+        </div>
+    </div>
+  </div>
+
   <script defer src="./src/index.js" type="module"></script>
   </body>
 </html>
