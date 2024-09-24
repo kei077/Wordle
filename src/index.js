@@ -4,7 +4,7 @@ const dictionary = validWordsForTesting;
 
 let message = document.getElementById("message");
 let timerInterval = null;
-let timeRemaining = 4 * 60; // 4 minutes
+let timeRemaining = 4 * 60; 
 
 let timerDisplay = document.getElementById("timer-display");
 let startButton = document.getElementById("start-timer");
