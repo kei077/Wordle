@@ -5,46 +5,122 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" href="./src/style.css" />
   </head>
   <body>
-    <div id="cont" class="container-flex mt-2">
-      <div>
-          <img src="assets/ensias.png" width="100px" height="auto" alt="">
+    <!-- Header Section -->
+    <header class="header-section">
+      <div class="container text-center py-3">
+        <img src="assets/bridge-logo-removebg-preview.png" width="140px" height="auto" alt="Bridge Logo" class="logo">
       </div>
-      <div>
-          <img src="assets/bridge-logo-removebg-preview.png" width="140px" height="auto" alt="">
-      </div>
-      <div>
-          <img src="assets/ADEI-Logo-Vector.png" width="100px" height="auto" alt="">
+    </header>
+
+    <!-- Message Section -->
+    <div class="container text-center" id="message-container">
+      <div id="message"></div>
+    </div>
+
+    <!-- Main Game Section -->
+    <div class="main-game-section">
+      <div class="container-fluid">
+        <div class="row justify-content-center align-items-start">
+          <!-- Timer and Controls -->
+          <div class="col-lg-3 col-md-4 col-sm-12 mb-4">
+            <div class="timer-card">
+              <div class="timer-display-container">
+                <h1 class="timer-display" id="timer-display">04:00</h1> 
+              </div>
+              
+              <div class="timer-controls">
+                <button id="stop-timer" class="control-btn pause-btn" title="Pause">
+                    <i class="bi bi-pause-fill"></i>
+                </button>
+                <button id="start-timer" class="control-btn play-btn" title="Start">
+                    <i class="bi bi-play-fill"></i>
+                </button>
+                <button id="reset-timer" class="control-btn reset-btn" title="Reset">
+                    <i class="bi bi-arrow-clockwise"></i>
+                </button>
+              </div>
+              
+              <div class="game-title">
+                <h3><span class="word">WORDLE</span><br> Bridge Edition</h3>
+              </div>
+              
+              <!-- Color Guide -->
+              <div class="color-guide mt-4">
+                <h5 class="guide-title">Color Guide</h5>
+                <div class="guide-items">
+                  <div class="guide-item">
+                    <div class="guide-box correct"></div>
+                    <span class="guide-text">Correct letter & position</span>
+                  </div>
+                  <div class="guide-item">
+                    <div class="guide-box wrong-position"></div>
+                    <span class="guide-text">Correct letter, wrong position</span>
+                  </div>
+                  <div class="guide-item">
+                    <div class="guide-box not-in-word"></div>
+                    <span class="guide-text">Letter not in word</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Game Grid -->
+          <div class="col-lg-6 col-md-8 col-sm-12">
+            <div class="game-container">
+              <div id="game"></div>
+              
+              <!-- Virtual Keyboard -->
+              <div class="keyboard-container mt-4">
+                <div class="keyboard-row">
+                  <button class="key" data-key="q">Q</button>
+                  <button class="key" data-key="w">W</button>
+                  <button class="key" data-key="e">E</button>
+                  <button class="key" data-key="r">R</button>
+                  <button class="key" data-key="t">T</button>
+                  <button class="key" data-key="y">Y</button>
+                  <button class="key" data-key="u">U</button>
+                  <button class="key" data-key="i">I</button>
+                  <button class="key" data-key="o">O</button>
+                  <button class="key" data-key="p">P</button>
+                </div>
+                <div class="keyboard-row">
+                  <button class="key" data-key="a">A</button>
+                  <button class="key" data-key="s">S</button>
+                  <button class="key" data-key="d">D</button>
+                  <button class="key" data-key="f">F</button>
+                  <button class="key" data-key="g">G</button>
+                  <button class="key" data-key="h">H</button>
+                  <button class="key" data-key="j">J</button>
+                  <button class="key" data-key="k">K</button>
+                  <button class="key" data-key="l">L</button>
+                </div>
+                <div class="keyboard-row">
+                  <button class="key action-key" data-key="Enter">
+                    <i class="bi bi-arrow-return-left"></i>
+                    ENTER
+                  </button>
+                  <button class="key" data-key="z">Z</button>
+                  <button class="key" data-key="x">X</button>
+                  <button class="key" data-key="c">C</button>
+                  <button class="key" data-key="v">V</button>
+                  <button class="key" data-key="b">B</button>
+                  <button class="key" data-key="n">N</button>
+                  <button class="key" data-key="m">M</button>
+                  <button class="key action-key" data-key="Backspace">
+                    <i class="bi bi-backspace"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="container-flex" id="message">
-    </div>
-    <div id="timer-section" class="container mt-2 pb-3 pt-3">
-      <div class="row">
-        <div class="col-md-2"></div>
-        <div class="col-md-3 mt-5 text-center cloud">
-            <h1 class="mt-5" id="timer-display">04:00</h1> 
-            <button id="stop-timer" >
-                <img src="assets/pause.png" width="30px" height="auto" alt="">
-            </button>
-            <button id="start-timer" >
-                <img src="assets/bouton-jouer.png" width="40px" height="auto" alt="">
-            </button>
-            <button id="reset-timer" >
-                <img src="assets/rejouer.png" width="30px" height="auto" alt="">
-            </button>
-            <hr>
-            <h3 id="message"><span class="word">WORDLE</span><br> Bridge Edition</h3>
-        </div>
-        <div class="col-md-6">
-          <div id="game"></div>
-        </div>
-        <div class="col-md-3"></div>
-        </div>
-    </div>
-  </div>
   <script defer src="./src/index.js" type="module"></script>
   </body>
 </html>

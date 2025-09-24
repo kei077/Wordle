@@ -14,14 +14,26 @@ let resetButton = document.getElementById("reset-timer");
 
 function startTimer() {
   if (!timerInterval) {
+      // Add visual feedback
+      startButton.style.transform = 'scale(0.95)';
+      setTimeout(() => startButton.style.transform = '', 150);
+      
       timerInterval = setInterval(() => {
           timeRemaining--;
           updateTimerDisplay();
 
+          // Add warning when time is running low
+          if (timeRemaining <= 60 && timeRemaining > 0) {
+              timerDisplay.style.color = '#dc3545';
+              timerDisplay.classList.add('pulse');
+          }
+
           if (timeRemaining <= 0) {
               clearInterval(timerInterval);
               timerInterval = null;
-              alert("Time's up!");
+              message.innerHTML = "<h3 class=\"text-danger\"> Time's up! Game Over! </h3>";
+              // Disable further input
+              document.body.onkeydown = null;
           }
       }, 1000);
   }
@@ -29,16 +41,65 @@ function startTimer() {
 
 function stopTimer() {
   if (timerInterval) {
+      // Add visual feedback
+      stopButton.style.transform = 'scale(0.95)';
+      setTimeout(() => stopButton.style.transform = '', 150);
+      
       clearInterval(timerInterval);
       timerInterval = null;
   }
 }
 
+function resetGame() {
+  // Reset game state
+  state.secret = dictionary[Math.floor(Math.random() * dictionary.length)];
+  state.grid = Array(6).fill().map(() => Array(5).fill(''));
+  state.currentRow = 0;
+  state.currentCol = 0;
+  
+  // Clear all boxes and reset their styles
+  for (let i = 0; i < 6; i++) {
+    for (let j = 0; j < 5; j++) {
+      const box = document.getElementById(`box${i}${j}`);
+      if (box) {
+        box.textContent = '';
+        box.className = 'box'; // Reset to default class
+        box.style.animation = '';
+      }
+    }
+  }
+  
+  // Reset keyboard colors
+  resetKeyboard();
+  
+  // Clear messages
+  message.innerHTML = '';
+  
+  // Remove timer card pulse effect if it exists
+  const timerCard = document.querySelector('.timer-card');
+  if (timerCard) {
+    timerCard.classList.remove('pulse');
+  }
+}
+
 function resetTimer() {
+  // Add visual feedback
+  resetButton.style.transform = 'scale(0.95)';
+  setTimeout(() => resetButton.style.transform = '', 150);
+  
   stopTimer(); 
   timeRemaining = 4 * 60; 
   updateTimerDisplay();
-
+  
+  // Reset timer display color and effects
+  timerDisplay.style.color = '';
+  timerDisplay.classList.remove('pulse');
+  
+  // Reset the entire game
+  resetGame();
+  
+  // Re-enable input if it was disabled
+  registerKeyboardEvents();
 }
 
 function updateTimerDisplay() {
@@ -105,7 +166,20 @@ function registerKeyboardEvents() {
           state.currentRow++;
           state.currentCol = 0;
         } else {
-          alert('Not a valid word.');
+          // Better visual feedback for invalid words
+          message.innerHTML = "<div class=\"text-danger\">❌ Not a valid word! Try again. ❌</div>";
+          setTimeout(() => {
+            message.innerHTML = '';
+          }, 2000);
+          
+          // Shake animation for current row
+          for (let i = 0; i < 5; i++) {
+            const box = document.getElementById(`box${state.currentRow}${i}`);
+            box.style.animation = 'shake 0.5s ease-in-out';
+            setTimeout(() => {
+              box.style.animation = '';
+            }, 500);
+          }
         }
       }
     }
@@ -163,19 +237,31 @@ function revealWord(guess) {
     const letterPosition = getPositionOfOccurrence(guess, letter, i);
 
     setTimeout(() => {
+      let keyboardStatus = '';
+      
       if (
         numOfOccurrencesGuess > numOfOccurrencesSecret &&
         letterPosition > numOfOccurrencesSecret
       ) {
         box.classList.add('empty');
+        keyboardStatus = 'not-in-word';
       } else {
         if (letter === state.secret[i]) {
           box.classList.add('right');
+          keyboardStatus = 'correct';
         } else if (state.secret.includes(letter)) {
           box.classList.add('wrong');
+          keyboardStatus = 'wrong-position';
         } else {
           box.classList.add('empty');
+          keyboardStatus = 'not-in-word';
         }
+      }
+      
+      // Update keyboard key color (only if it's not already correct)
+      const currentKey = document.querySelector(`[data-key="${letter.toLowerCase()}"]`);
+      if (currentKey && !currentKey.classList.contains('correct')) {
+        updateKeyboardKey(letter, keyboardStatus);
       }
     }, ((i + 1) * animation_duration) / 2);
 
@@ -188,9 +274,14 @@ function revealWord(guess) {
 
   setTimeout(() => {
     if (isWinner) {
-      message.innerHTML = "<h3 class=\"text-success\">Congratulations you guessed the word correctly !</h3>"
+      message.innerHTML = "<h3 class=\"text-success\"> Congratulations! You guessed the word correctly! </h3>"
+      // Add celebration effect
+      document.querySelector('.timer-card').classList.add('pulse');
+      setTimeout(() => {
+        document.querySelector('.timer-card').classList.remove('pulse');
+      }, 3000);
     } else if (isGameOver) {
-      message.innerHTML = "<h3 class=\"text-danger\">`Better luck next time! The word was ${state.secret}.`</h3>"
+      message.innerHTML = `<h3 class="text-danger"> Better luck next time! The word was "${state.secret.toUpperCase()}". ⏰</h3>`
     }
   }, 3 * animation_duration);
 }
@@ -211,11 +302,86 @@ function removeLetter() {
   state.currentCol--;
 }
 
+function updateKeyboardKey(letter, status) {
+  const key = document.querySelector(`[data-key="${letter.toLowerCase()}"]`);
+  if (key) {
+    // Remove existing status classes
+    key.classList.remove('correct', 'wrong-position', 'not-in-word');
+    
+    // Add new status class
+    if (status === 'correct') {
+      key.classList.add('correct');
+    } else if (status === 'wrong-position') {
+      key.classList.add('wrong-position');
+    } else if (status === 'not-in-word') {
+      key.classList.add('not-in-word');
+    }
+  }
+}
+
+function resetKeyboard() {
+  const keys = document.querySelectorAll('.key');
+  keys.forEach(key => {
+    key.classList.remove('correct', 'wrong-position', 'not-in-word');
+  });
+}
+
+function registerVirtualKeyboardEvents() {
+  const keys = document.querySelectorAll('.key');
+  keys.forEach(key => {
+    key.addEventListener('click', () => {
+      const keyValue = key.getAttribute('data-key');
+      
+      // Add visual feedback
+      key.classList.add('used');
+      setTimeout(() => key.classList.remove('used'), 100);
+      
+      // Handle the key press
+      if (keyValue === 'Enter') {
+        handleEnterKey();
+      } else if (keyValue === 'Backspace') {
+        removeLetter();
+        updateGrid();
+      } else if (isLetter(keyValue)) {
+        addLetter(keyValue.toLowerCase());
+        updateGrid();
+      }
+    });
+  });
+}
+
+function handleEnterKey() {
+  if (state.currentCol === 5) {
+    const word = getCurrentWord();
+    if (isWordValid(word)) {
+      revealWord(word);
+      state.currentRow++;
+      state.currentCol = 0;
+    } else {
+      // Better visual feedback for invalid words
+      message.innerHTML = "<div class=\"text-danger\">❌ Not a valid word! Try again. ❌</div>";
+      setTimeout(() => {
+        message.innerHTML = '';
+      }, 2000);
+      
+      // Shake animation for current row
+      for (let i = 0; i < 5; i++) {
+        const box = document.getElementById(`box${state.currentRow}${i}`);
+        box.style.animation = 'shake 0.5s ease-in-out';
+        setTimeout(() => {
+          box.style.animation = '';
+        }, 500);
+      }
+    }
+  }
+}
+
 function startup() {
   const game = document.getElementById('game');
   drawGrid(game);
 
   registerKeyboardEvents();
+  registerVirtualKeyboardEvents();
 }
 
 startup();
