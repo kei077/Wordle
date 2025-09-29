@@ -1,23 +1,21 @@
 export const testDictionary = ['earth', 'plane', 'crane', 'audio', 'house', 'offer', 'often'];
 
 export const validWordsForTesting = [
-  "offre", 
+  "offer", 
   "stage", 
   "agora", 
   "seven", 
-  "tache",
-  "liens",
+  "tasks",
+  "links",
   "guide",
   "firms",
-  "jobs",
   "talks",
   "meets",
-  "links",
   "learn",
 ];
 
 export const realDictionary = [
-  "offre", 
+  "offer", 
   "stage", 
   "agora", 
   "seven", 
@@ -25,7 +23,6 @@ export const realDictionary = [
   "liens",
   "guide",
   "firms",
-  "jobs",
   "talks",
   "meets",
   "links",
